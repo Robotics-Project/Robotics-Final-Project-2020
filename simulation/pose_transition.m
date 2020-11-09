@@ -19,7 +19,7 @@ function angle_set = pose_transition(pose_start, pose_end, t)
         [~, index] = min(abs_poss_angle_ends); % Argmin
         angle_end = poss_angle_ends(index);
         
-        steps = numel(t);
+        steps = t;
         angle_steps = linspace(angle_start, angle_end, steps);
         angle_set.(fields{joint}) = angle_steps';
     end
