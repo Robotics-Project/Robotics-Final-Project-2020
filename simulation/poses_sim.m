@@ -5,40 +5,6 @@
 % Simulation Parameters for model
 simParameters = struct;
 simParameters.StopTime = '10'; % units in seconds
-t = linspace(0, 10, 100)'; 
-
-% Angle Input Setup
-% Back Right
-BRUpperLeg.time=t;
-BRUpperLeg.signals.dimensions=1;
-
-% Back Left
-BLUpperLeg.time=t;
-BLUpperLeg.signals.dimensions=1;
-
-% Front Right
-FRUpperLeg.time=t;
-FRUpperLeg.signals.dimensions=1;
-
-% Front Left
-FLUpperLeg.time=t;
-FLUpperLeg.signals.dimensions=1;
-
-% Back Right
-BRLowerLeg.time=t;
-BRLowerLeg.signals.dimensions=1;
-
-% Back Left
-BLLowerLeg.time=t;
-BLLowerLeg.signals.dimensions=1;
-
-% Front Right
-FRLowerLeg.time=t;
-FRLowerLeg.signals.dimensions=1;
-
-% Front Left
-FLLowerLeg.time=t;
-FLLowerLeg.signals.dimensions=1;
 
 % Half-Squat Constant
 squat = struct;
@@ -74,23 +40,23 @@ sitting.FRLower = deg2rad(0);
 sitting.FLLower = deg2rad(0);
 
 
-commands = [0, 1, 2, 0, 1];
+commands = [0, 1, 2, 0, 2, 1, 0, 0, 1];
 
 pose_map = containers.Map({0, 1, 2}, {standing, sitting, squat});
 
 command = pose_map(commands(1));
 command2 = pose_map(commands(2));
-transition = pose_transition(command, command2, 12); %move transition
-t2 = pose_transition(command2, command2, 13); %wait transition
+transition = pose_transition(command, command2, 6); %move transition
+t2 = pose_transition(command2, command2, 7); %wait transition
 transition = cat_transitions(transition, t2);
 command = command2;
 
 for idx = 3:numel(commands)
     cmd_num = commands(idx);
     command2 = pose_map(cmd_num);
-    t2 = pose_transition(command, command2, 12); %move transition
+    t2 = pose_transition(command, command2, 6); %move transition
     transition = cat_transitions(transition, t2);
-    t2 = pose_transition(command2, command2, 13); %wait transition
+    t2 = pose_transition(command2, command2, 7); %wait transition
     transition = cat_transitions(transition, t2);
     command = command2;
 end
@@ -106,6 +72,43 @@ BLLowerLeg.signals.values=transition.BLLower;
 
 FRLowerLeg.signals.values=transition.FRLower;
 FLLowerLeg.signals.values=transition.FLLower;
+
+steps = numel(transition.BRUpper);
+
+t = linspace(0, 10, steps)'; 
+
+% Angle Input Setup
+% Back Right
+BRUpperLeg.time=t;
+BRUpperLeg.signals.dimensions=1;
+
+% Back Left
+BLUpperLeg.time=t;
+BLUpperLeg.signals.dimensions=1;
+
+% Front Right
+FRUpperLeg.time=t;
+FRUpperLeg.signals.dimensions=1;
+
+% Front Left
+FLUpperLeg.time=t;
+FLUpperLeg.signals.dimensions=1;
+
+% Back Right
+BRLowerLeg.time=t;
+BRLowerLeg.signals.dimensions=1;
+
+% Back Left
+BLLowerLeg.time=t;
+BLLowerLeg.signals.dimensions=1;
+
+% Front Right
+FRLowerLeg.time=t;
+FRLowerLeg.signals.dimensions=1;
+
+% Front Left
+FLLowerLeg.time=t;
+FLLowerLeg.signals.dimensions=1;
 
 
 simOut = sim('robot.slx', simParameters);
