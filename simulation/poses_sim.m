@@ -45,8 +45,9 @@ sitting.FLLower = deg2rad(0);
 
 % Generate a List of Commands
 % commands = [0, 1, 2, 0, 2, 1, 0, 0, 1];
-actionListNum = [2;2;0;2;0;2;0;2;5;5;5;5;5];
-commands = actionListNum';
+% actionListNum = [2;2;0;2;0;2;0;2;5;5;5;5;5];
+% commands = actionListNum';
+commands = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 
 % 0 = fist hand gesture
 % 2 = bunny hand gesture
@@ -130,12 +131,18 @@ simOut = sim('robot.slx', simParameters);
 % Axis-Angle Output and Distance Forward (X direction)
 figure(1);
 plot(simOut.axis.time, simOut.axis.data);
+legend("X", "Y", "Z");
+xlabel("Time (Seconds)");
 title("axis of rotation");
 
 figure(2);
 plot(simOut.q.time, simOut.q.data);
+ylabel("Angle (radians)");
+xlabel("Time (Seconds)");
 title("angle of rotation");
 
 figure(3);
 plot(simOut.distance_forward.time, simOut.distance_forward.data);
 title("distance forward");
+xlabel("Time (Seconds)");
+ylabel("Distance (meters?)");

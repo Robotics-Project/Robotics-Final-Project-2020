@@ -31,97 +31,108 @@ walk.FLLower = 0;
 fields = fieldnames(walk);
 
 % Random walk data
+attempts = 1; % Number of simulations to run
 steps = 200; % 100 time steps
+tic
+for attempt = 1:attempts
+    for joint = 1:numel(fields)
+        random_walk = zeros(steps, 1);
+        random_walk(1) = 0;
 
-for joint = 1:numel(fields)
-    random_walk = zeros(steps, 1);
-    random_walk(1) = 0;
-
-    for i=2:steps
-        R = rand(1);
-        if R < 0.5
-            S = random_walk(i-1) + 0.1;
-        else
-            S = random_walk(i-1) - 0.1;
+        for i=2:steps
+            R = rand(1);
+            if R < 0.5
+                S = random_walk(i-1) + 0.1;
+            else
+                S = random_walk(i-1) - 0.1;
+            end
+            random_walk(i) = S;
         end
-        random_walk(i) = S;
+        walk.(fields{joint}) = random_walk;
     end
-    walk.(fields{joint}) = random_walk;
+
+
+
+    % 2. Simulate each walk, return the torso and distance data. Score the walk
+    % according to torso data and distance data.
+    simTime = 20;
+    simParameters = struct;
+    simParameters.StopTime = num2str(simTime); % units in seconds
+    BRUpperLeg.signals.values=walk.BRUpper;
+    BLUpperLeg.signals.values=walk.BLUpper;
+
+    FRUpperLeg.signals.values=walk.FRUpper;
+    FLUpperLeg.signals.values=walk.FLUpper;
+
+    BRLowerLeg.signals.values=walk.BRLower;
+    BLLowerLeg.signals.values=walk.BLLower;
+
+    FRLowerLeg.signals.values=walk.FRLower;
+    FLLowerLeg.signals.values=walk.FLLower;
+
+    steps = numel(walk.BRUpper);
+
+    t = linspace(0, simTime, steps)'; 
+
+    % Back Right
+    BRUpperLeg.time=t;
+    BRUpperLeg.signals.dimensions=1;
+
+    % Back Left
+    BLUpperLeg.time=t;
+    BLUpperLeg.signals.dimensions=1;
+
+    % Front Right
+    FRUpperLeg.time=t;
+    FRUpperLeg.signals.dimensions=1;
+
+    % Front Left
+    FLUpperLeg.time=t;
+    FLUpperLeg.signals.dimensions=1;
+
+    % Back Right
+    BRLowerLeg.time=t;
+    BRLowerLeg.signals.dimensions=1;
+
+    % Back Left
+    BLLowerLeg.time=t;
+    BLLowerLeg.signals.dimensions=1;
+
+    % Front Right
+    FRLowerLeg.time=t;
+    FRLowerLeg.signals.dimensions=1;
+
+    % Front Left
+    FLLowerLeg.time=t;
+    FLLowerLeg.signals.dimensions=1;
+
+    simOut = sim('robot.slx', simParameters);
+
+    walk.distance_forward = simOut.distance_forward.data;
+    walk.axis = simOut.axis.data;
+    walk.angle = simOut.q.data;
+    walks(attempt) = walk;
 end
-
-
-
-% 2. Simulate each walk, return the torso and distance data. Score the walk
-% according to torso data and distance data.
-simTime = 20;
-simParameters = struct;
-simParameters.StopTime = num2str(simTime); % units in seconds
-BRUpperLeg.signals.values=walk.BRUpper;
-BLUpperLeg.signals.values=walk.BLUpper;
-
-FRUpperLeg.signals.values=walk.FRUpper;
-FLUpperLeg.signals.values=walk.FLUpper;
-
-BRLowerLeg.signals.values=walk.BRLower;
-BLLowerLeg.signals.values=walk.BLLower;
-
-FRLowerLeg.signals.values=walk.FRLower;
-FLLowerLeg.signals.values=walk.FLLower;
-
-steps = numel(walk.BRUpper);
-
-t = linspace(0, simTime, steps)'; 
-
-% Back Right
-BRUpperLeg.time=t;
-BRUpperLeg.signals.dimensions=1;
-
-% Back Left
-BLUpperLeg.time=t;
-BLUpperLeg.signals.dimensions=1;
-
-% Front Right
-FRUpperLeg.time=t;
-FRUpperLeg.signals.dimensions=1;
-
-% Front Left
-FLUpperLeg.time=t;
-FLUpperLeg.signals.dimensions=1;
-
-% Back Right
-BRLowerLeg.time=t;
-BRLowerLeg.signals.dimensions=1;
-
-% Back Left
-BLLowerLeg.time=t;
-BLLowerLeg.signals.dimensions=1;
-
-% Front Right
-FRLowerLeg.time=t;
-FRLowerLeg.signals.dimensions=1;
-
-% Front Left
-FLLowerLeg.time=t;
-FLLowerLeg.signals.dimensions=1;
-
-simOut = sim('robot.slx', simParameters);
-
-distance_forward = simOut.distance_forward.data;
-axis = simOut.axis.data;
-angle = simOut.q.data;
+timeElapsed = toc
 
 % Axis-Angle Output and Distance Forward (X direction)
 figure(1);
 plot(simOut.axis.time, simOut.axis.data);
+legend("X", "Y", "Z");
+xlabel("Time (Seconds)");
 title("axis of rotation");
 
 figure(2);
 plot(simOut.q.time, simOut.q.data);
+ylabel("Angle (radians)");
+xlabel("Time (Seconds)");
 title("angle of rotation");
 
 figure(3);
 plot(simOut.distance_forward.time, simOut.distance_forward.data);
 title("distance forward");
+xlabel("Time (Seconds)");
+ylabel("Distance (meters?)");
 
 % 3. Format the walking input, and the torso and distance output into one
 % matrix. Then put the top ten scored matrices together
