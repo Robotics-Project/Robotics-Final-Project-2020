@@ -3,9 +3,12 @@
 % simulation
 
 % Simulation Parameters for model
-simParameters = struct;
-simParameters.StopTime = '10'; % units in seconds
 
+simTime = 20;
+simParameters = struct;
+simParameters.StopTime = num2str(simTime); % units in seconds
+
+% Pose Angles for each pose
 % Half-Squat Constant
 squat = struct;
 squat.BRUpper = deg2rad(180-135);
@@ -40,9 +43,19 @@ sitting.FRLower = deg2rad(0);
 sitting.FLLower = deg2rad(0);
 
 
-commands = [0, 1, 2, 0, 2, 1, 0, 0, 1];
+% Generate a List of Commands
+% commands = [0, 1, 2, 0, 2, 1, 0, 0, 1];
+commands = actionListNum';
 
-pose_map = containers.Map({0, 1, 2}, {standing, sitting, squat});
+% 0 = fist hand gesture
+% 2 = bunny hand gesture
+% 5 = high five hand gesture
+pose_map = containers.Map({0, 2, 5}, {standing, sitting, squat});
+
+
+% Notice, transition time is a calcuation of 6/(numel(commands)*(6+7)) for
+% 6 steps and 7/(numel(commands)*(6+7)) steps where a step is
+% tf-t0/length(steps)
 
 command = pose_map(commands(1));
 command2 = pose_map(commands(2));
@@ -75,7 +88,7 @@ FLLowerLeg.signals.values=transition.FLLower;
 
 steps = numel(transition.BRUpper);
 
-t = linspace(0, 10, steps)'; 
+t = linspace(0, simTime, steps)'; 
 
 % Angle Input Setup
 % Back Right
