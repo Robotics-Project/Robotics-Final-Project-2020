@@ -45,6 +45,7 @@ sitting.FLLower = deg2rad(0);
 
 % Generate a List of Commands
 % commands = [0, 1, 2, 0, 2, 1, 0, 0, 1];
+actionListNum = [2;2;0;2;0;2;0;2;5;5;5;5;5];
 commands = actionListNum';
 
 % 0 = fist hand gesture
@@ -67,7 +68,7 @@ command = command2;
 for idx = 3:numel(commands)
     cmd_num = commands(idx);
     command2 = pose_map(cmd_num);
-    t2 = pose_transition(command, command2, 6); %move transition
+    t2 = pose_transition(command, command2, 2); %move transition % Originally 6
     transition = cat_transitions(transition, t2);
     t2 = pose_transition(command2, command2, 7); %wait transition
     transition = cat_transitions(transition, t2);
@@ -125,3 +126,16 @@ FLLowerLeg.signals.dimensions=1;
 
 
 simOut = sim('robot.slx', simParameters);
+
+% Axis-Angle Output and Distance Forward (X direction)
+figure(1);
+plot(simOut.axis.time, simOut.axis.data);
+title("axis of rotation");
+
+figure(2);
+plot(simOut.q.time, simOut.q.data);
+title("angle of rotation");
+
+figure(3);
+plot(simOut.distance_forward.time, simOut.distance_forward.data);
+title("distance forward");
