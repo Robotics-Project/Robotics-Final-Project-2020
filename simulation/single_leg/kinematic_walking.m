@@ -19,7 +19,7 @@
 %% Mechanical parameters
 L = 0.54;    % Leg length (m)
 g = 9.81;   % Acceleration due to gravity (m/s^2)
-m = 28;     % Mass (Kg)
+m = 28.4;     % Mass (Kg)
 k = 5315;   % Leg stiffness (N/m)
 
 %% Initial conditions positions and speeds
