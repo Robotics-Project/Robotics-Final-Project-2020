@@ -93,46 +93,23 @@ DataValues = [data1;data2;data3];
 
 sim('sm_inv_kin') %input: angles, gait period, geomatry, time and data values    ouptut: knee and hip angles, velocity, torque
 
-
-%% 
-% Find starting and finishing indices for aerial phase for one leg
-idx1 = find(hip_torque.time > T_gait/4, 1 );
-idx2 = find(hip_torque.time > 7*T_gait/4, 1 );
-
-% Hip angle in aerial phase
-t_th = Hip.time(idx1+1:idx2-1);
-t_th = t_th - t_th(1);
-u_th = Hip.signals.values(idx1+1:idx2-1);
-th_dot0 = (u_th(2)-u_th(1))/(t_th(2)-t_th(1));
-
-% Hip velocity in aerial phase
-t_w = HipVel.time(idx1+1:idx2-1);
-t_w = t_w - t_w(1);
-u_w = HipVel.signals.values(idx1+1:idx2-1);
-
-% Maximum inertia about hip
-J = m2*l2*l1^2+(m1*l1^3+m2*l2^3)/3;
-
-
-%% The interface to hold and input walking equations for each step
-%to simulations
-
-% kin_walk = struct;
-% kin_walk.BRUpper = 0;
-% kin_walk.BLUpper = 0;
-% kin_walk.BRLower = 0;
-% kin_walk.BLLower = 0;
-% kin_walk.FRUpper = 0;
-% kin_walk.FLUpper = 0;
-% kin_walk.FRLower = 0;
-% kin_walk.FLLower = 0;
 % 
+% %% 
+% % Find starting and finishing indices for aerial phase for one leg
+% idx1 = find(hip_torque.time > T_gait/4, 1 );
+% idx2 = find(hip_torque.time > 7*T_gait/4, 1 );
 % 
-% attempts = 1; % Number of simulations to run
-% steps = 200; % 100 time steps
-% tic
+% % Hip angle in aerial phase
+% t_th = Hip.time(idx1+1:idx2-1);
+% t_th = t_th - t_th(1);
+% u_th = Hip.signals.values(idx1+1:idx2-1);
+% th_dot0 = (u_th(2)-u_th(1))/(t_th(2)-t_th(1));
 % 
-% for joint = 1:numel(fields)
-%     
-%     
-% end
+% % Hip velocity in aerial phase
+% t_w = HipVel.time(idx1+1:idx2-1);
+% t_w = t_w - t_w(1);
+% u_w = HipVel.signals.values(idx1+1:idx2-1);
+% 
+% % Maximum inertia about hip
+% J = m2*l2*l1^2+(m1*l1^3+m2*l2^3)/3;
+
