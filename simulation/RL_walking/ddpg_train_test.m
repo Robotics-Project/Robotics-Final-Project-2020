@@ -36,7 +36,8 @@ init_height = 54;
 
 % create the action info
 numAct = 8;
-actionInfo = rlNumericSpec([numAct 1],'LowerLimit',-pi/2,'UpperLimit', pi/2);
+%actionInfo = rlNumericSpec([numAct 1],'LowerLimit',-pi/2,'UpperLimit', pi/2);
+actionInfo = rlNumericSpec([numAct 1],'LowerLimit',-1,'UpperLimit', 1);
 actionInfo.Name = 'foot_torque';
 
 % Environment
