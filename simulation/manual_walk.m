@@ -90,10 +90,21 @@ LowerLegAngle = simOut.LowerLegAngle;
 ULAngleValues = deg2rad(UpperLegAngle.Data);
 LLAngleValues = LowerLegAngle.Data;
 
+ULAngleValues2 = circshift(ULAngleValues,floor(length(ULAngleValues)/2));
+LLAngleValues2 = circshift(LLAngleValues,floor(length(LLAngleValues)/2));
+
+% shift = 293;
+% ULAngleValues = circshift(ULAngleValues,shift);
+% LLAngleValues = circshift(LLAngleValues,shift);
+% ULAngleValues2 = circshift(ULAngleValues2,shift);
+% LLAngleValues2 = circshift(LLAngleValues2,shift);
+
 % % Repeat Limb Movement n times
-n = 5;
+n = 10;
 ULAngleValues = repmat(ULAngleValues, n, 1);
 LLAngleValues = repmat(LLAngleValues, n, 1);
+ULAngleValues2 = repmat(ULAngleValues2, n, 1);
+LLAngleValues2 = repmat(LLAngleValues2, n, 1);
 % 
 % % Wait in position at the end for n Limb Movements;
 % wait_pad = zeros(3*length(DataValues), 1);
@@ -101,16 +112,19 @@ LLAngleValues = repmat(LLAngleValues, n, 1);
 % 
 % DataValues = [DataValues; wait_pad];
 
-walk.BRUpper = ULAngleValues;
-walk.BLUpper = ULAngleValues;
+% Invert the starting time of leg position.
 
-walk.FRUpper = ULAngleValues;
+
+walk.BRUpper = ULAngleValues;
+walk.BLUpper = ULAngleValues2;
+
+walk.FRUpper = ULAngleValues2;
 walk.FLUpper = ULAngleValues;
 
 walk.BRLower = LLAngleValues;
-walk.BLLower = LLAngleValues;
+walk.BLLower = LLAngleValues2;
 
-walk.FRLower = LLAngleValues;
+walk.FRLower = LLAngleValues2;
 walk.FLLower = LLAngleValues;
 
 % walk.BRUpper = wait_pad;
@@ -120,7 +134,8 @@ walk.FLLower = LLAngleValues;
 % walk.FLUpper = wait_pad;
 
 %% Simulation Parameters for model
-simTime = (0.612434)*(n);
+% simTime = (0.612434)*(n);
+simTime = (1.5)*(n);
 simParameters = struct;
 simParameters.StopTime = num2str(simTime); % units in seconds
 
