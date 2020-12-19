@@ -88,7 +88,7 @@ LowerLegAngle = simOut.LowerLegAngle;
 %% Solve for one leg
 
 ULAngleValues = deg2rad(UpperLegAngle.Data);
-LLAngleValues = LowerLegAngle.Data;
+LLAngleValues = deg2rad(LowerLegAngle.Data);
 
 ULAngleValues2 = circshift(ULAngleValues,floor(length(ULAngleValues)/2));
 LLAngleValues2 = circshift(LLAngleValues,floor(length(LLAngleValues)/2));
@@ -135,7 +135,7 @@ walk.FLLower = LLAngleValues;
 
 %% Simulation Parameters for model
 % simTime = (0.612434)*(n);
-simTime = (1.5)*(n);
+simTime = (1.7)*(n);
 simParameters = struct;
 simParameters.StopTime = num2str(simTime); % units in seconds
 
@@ -189,6 +189,7 @@ FRLowerLeg.signals.dimensions=1;
 FLLowerLeg.time=t;
 FLLowerLeg.signals.dimensions=1;
 
+camdolly(dx(i),dy(i),0)
 simOut = sim('robot.slx', simParameters);
 
 % % Axis-Angle Output and Distance Forward (X direction)
