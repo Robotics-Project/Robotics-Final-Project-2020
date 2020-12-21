@@ -1,4 +1,3 @@
-load classifedEx;
 len = size(gestureClassified);
 
 % use class array and count array
@@ -19,7 +18,7 @@ end
 disp(class);
 disp(count);
 
-cntThresh = 10;
+cntThresh = 15;
 actionList = class(count>cntThresh,:);
 
 disp(actionList);

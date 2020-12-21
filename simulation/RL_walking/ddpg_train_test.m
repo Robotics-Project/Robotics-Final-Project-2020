@@ -1,22 +1,3 @@
-%{
-%% Load and Open Model
-mdl = 'robot.slx';
-%open_system(mdl);
-
-%% Create Environment Interface
-numObs = 44;
-obsInfo = rlNumericSpec([numObs 1]);
-obsInfo.Name = 'observations';
-
-numAct = 8;
-actInfo = rlNumericSpec([numAct 1],'LowerLimit',-1,'UpperLimit', 1);
-actInfo.Name = 'angle';
-
-blk = [mdl, '/RL Agent']
-env = rlSimulinkEnv(mdl,blk,obsInfo,actInfo);
-
-env.ResetFcn = @quadrupedResetFcn;
-%}
 % Walking Robot -- DDPG Agent Training Script (3D)
 % Copyright 2019 The MathWorks, Inc.
 close all;
@@ -32,13 +13,12 @@ observationInfo = rlNumericSpec([numObs 1]);
 observationInfo.Name = 'observations';
 Ts = 0.2;
 Tf = 5;
-init_height = 54;
+init_height = 0.54;
 
 % create the action info
 numAct = 8;
-%actionInfo = rlNumericSpec([numAct 1],'LowerLimit',-pi/2,'UpperLimit', pi/2);
-actionInfo = rlNumericSpec([numAct 1],'LowerLimit',-1,'UpperLimit', 1);
-actionInfo.Name = 'foot_torque';
+actionInfo = rlNumericSpec([numAct 1],'LowerLimit',-pi/2,'UpperLimit', pi/2);
+actionInfo.Name = 'foot_angle';
 
 % Environment
 mdl = 'RLrobot';
